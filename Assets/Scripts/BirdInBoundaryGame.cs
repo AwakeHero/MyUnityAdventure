@@ -5,7 +5,8 @@ public class BirdInBoundaryGame : MonoBehaviour
     [SerializeField] private Bird _bird;
     [SerializeField] private float _upperYLimit;
     [SerializeField] private float _lowerYLimit;
-
+    [SerializeField] private float _leftXLimit;
+    [SerializeField] private float _rightXLimit;
     
     private bool _isRunning;
 
@@ -21,10 +22,13 @@ public class BirdInBoundaryGame : MonoBehaviour
    
         if (!_isRunning) return;
 
-        if (_IsOutOfBoundary()) LooseGame();
+        if (_IsOutOfBoundary()) LoseGame();
+
+        if (_IsWinner()) WinGame();
     }
 
-    private bool _IsOutOfBoundary() => _bird.transform.position.y > _upperYLimit || _bird.transform.position.y < _lowerYLimit;
+    private bool _IsOutOfBoundary() => _bird.transform.position.y > _upperYLimit || _bird.transform.position.y < _lowerYLimit || _bird.transform.position.x < _leftXLimit || _bird.transform.position.x > _rightXLimit;
+    private bool _IsWinner() => _bird.JumpCount >= 30;
 
     private void StartGame()
     {
@@ -35,8 +39,16 @@ public class BirdInBoundaryGame : MonoBehaviour
         _isRunning = true;
     }
 
-    private void LooseGame()
+    private void LoseGame()
     {
+        Debug.Log($"Ваши счет: {_bird.JumpCount}");
+        _bird.gameObject.SetActive(false);
+        _isRunning = false;
+    }
+
+    private void WinGame()
+    {
+        Debug.Log($"Вы победили!");
         Debug.Log($"Ваши счет: {_bird.JumpCount}");
         _bird.gameObject.SetActive(false);
         _isRunning = false;
