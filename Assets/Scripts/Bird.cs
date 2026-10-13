@@ -32,7 +32,10 @@ public class Bird : MonoBehaviour
             AddJumpCount(_leftAndRightJumpCount);
         }
     }
-
-    public void ResetJumpCount() => JumpCount = 0;
+    public void Reset()
+    {
+        JumpCount = 0;
+        _rigidbody.linearVelocity = Vector3.zero;
+    }
     public void AddJumpCount(int count) => JumpCount += count;
 }

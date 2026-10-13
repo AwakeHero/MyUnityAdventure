@@ -34,8 +34,7 @@ public class BirdInBoundaryGame : MonoBehaviour
     {
         _bird.gameObject.SetActive(true);
         _bird.transform.position = Vector3.zero;
-        _bird.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-        _bird.ResetJumpCount();
+        _bird.Reset();
         _isRunning = true;
     }
 
