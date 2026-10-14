@@ -6,30 +6,42 @@ public class Bird : MonoBehaviour
     [SerializeField]private Vector3 _jumpLeftForce;
     [SerializeField]private Vector3 _jumpRightForce;
     [SerializeField]private Rigidbody _rigidbody;
-    private int _upJumpCount = 1;
-    private int _leftAndRightJumpCount = 3;
+    private int _upJumpScore = 1;
+    private float _defaultScale;
+    private float _targetScale;
+    private float _additiveScalePerJump = 0.25f;
+    private int _leftAndRightJumpScore = 3;
     public int JumpCount { get; private set;}
+    public float MaxScale => _defaultScale * 2;
 
-    // Update is called once per frame
+    private void Start()
+    {
+        _defaultScale = _targetScale = transform.localScale.y;
+    }
+
     private void Update()
     {
+        UpdateScale();
         if (Input.GetKeyDown(KeyCode.W))
         {
             
             _rigidbody.AddForce(_jumpForce, ForceMode.Impulse);
-            AddJumpCount(_upJumpCount);
+            AddJumpCount(_upJumpScore);
+            IncreaseTargetScale();
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
 
             _rigidbody.AddForce(_jumpLeftForce, ForceMode.Impulse);
-            AddJumpCount(_leftAndRightJumpCount);
+            AddJumpCount(_leftAndRightJumpScore);
+            IncreaseTargetScale();
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
 
             _rigidbody.AddForce(_jumpRightForce, ForceMode.Impulse);
-            AddJumpCount(_leftAndRightJumpCount);
+            AddJumpCount(_leftAndRightJumpScore);
+            IncreaseTargetScale();
         }
     }
     public void Reset()
@@ -38,4 +50,18 @@ public class Bird : MonoBehaviour
         _rigidbody.linearVelocity = Vector3.zero;
     }
     public void AddJumpCount(int count) => JumpCount += count;
+
+    private void IncreaseTargetScale()
+    {
+        _targetScale += _additiveScalePerJump;
+
+        if (_targetScale > MaxScale) _targetScale = MaxScale;
+    }
+
+    private void UpdateScale()
+    {
+        if (_targetScale > _defaultScale) _targetScale -= Time.deltaTime;
+
+        transform.localScale = new Vector3(_targetScale, _targetScale, _targetScale);
+    }
 }
