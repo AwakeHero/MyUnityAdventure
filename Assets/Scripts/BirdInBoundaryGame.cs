@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class BirdInBoundaryGame : MonoBehaviour
 {
+    private string _cameraShakeKey = "Shake";
+
     [SerializeField] private Bird _bird;
     [SerializeField] private float _upperYLimit;
     [SerializeField] private float _lowerYLimit;
     [SerializeField] private float _leftXLimit;
     [SerializeField] private float _rightXLimit;
+    [SerializeField] ParticleSystem _deathEffect;
+
+    [SerializeField] Animator _cameraAnimator;
     
     private bool _isRunning;
 
@@ -43,6 +48,10 @@ public class BirdInBoundaryGame : MonoBehaviour
         Debug.Log($"Ваши счет: {_bird.JumpCount}");
         _bird.gameObject.SetActive(false);
         _isRunning = false;
+        _deathEffect.transform.position = _bird.transform.position;
+        _deathEffect.Play();
+        _cameraAnimator.SetTrigger(_cameraShakeKey);
+
     }
 
     private void WinGame()

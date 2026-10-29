@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
+    private string _jumpKey = "Jump";
+
     [SerializeField]private Vector3 _jumpForce;
     [SerializeField]private Vector3 _jumpLeftForce;
     [SerializeField]private Vector3 _jumpRightForce;
     [SerializeField]private Rigidbody _rigidbody;
+    [SerializeField]private ParticleSystem _jumpEffect;
+    [SerializeField]private Animator _animator;
+
     private int _upJumpScore = 1;
     private float _defaultScale;
     private float _targetScale;
@@ -28,6 +33,9 @@ public class Bird : MonoBehaviour
             _rigidbody.AddForce(_jumpForce, ForceMode.Impulse);
             AddJumpCount(_upJumpScore);
             IncreaseTargetScale();
+            _jumpEffect.Play();
+            _animator.SetTrigger(_jumpKey);
+            
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -35,6 +43,8 @@ public class Bird : MonoBehaviour
             _rigidbody.AddForce(_jumpLeftForce, ForceMode.Impulse);
             AddJumpCount(_leftAndRightJumpScore);
             IncreaseTargetScale();
+            _jumpEffect.Play();
+            _animator.SetTrigger(_jumpKey);
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -42,6 +52,8 @@ public class Bird : MonoBehaviour
             _rigidbody.AddForce(_jumpRightForce, ForceMode.Impulse);
             AddJumpCount(_leftAndRightJumpScore);
             IncreaseTargetScale();
+            _jumpEffect.Play();
+            _animator.SetTrigger(_jumpKey);
         }
     }
     public void Reset()
