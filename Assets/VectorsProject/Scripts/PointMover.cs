@@ -1,17 +1,17 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PointMover : MonoBehaviour
 {
-    [SerializeField] private int _speed;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _agroDistance;
+    [SerializeField] private float _rotationSpeed;
+    [SerializeField] private Transform _playerPosition;
     [SerializeField] private List<Transform> _targets;
-    [SerializeField] private Queue<Vector3> _targetsPosition;
+    private Queue<Vector3> _targetsPosition;
     private Vector3 _currentTarget;
-    private float _minDistanceToTarget = 0.05f;
-    private float _agroDistance = 3f;
-    [SerializeField] private Vector3 _playerPosition;
+    private float _minDistanceToTarget = 0.3f;
+
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class PointMover : MonoBehaviour
         SwitchTarget();
     } 
 
-    private Vector3 GetDirectionToHero() => _playerPosition - transform.position;
+    private Vector3 GetDirectionToHero() => _playerPosition.position - transform.position;
     private Vector3 GetDirectionToTarget() => _currentTarget - transform.position;
     private void Update()
     {
@@ -34,7 +34,7 @@ public class PointMover : MonoBehaviour
             if (direction.magnitude <= _minDistanceToTarget) SwitchTarget();
         }
         ProcessMoveTo(direction.normalized);
-        ProcessRotateTo(direction.normalized);
+        ProcessRotateTo(direction);
     }
     
     private bool IsPlayerDetected()
@@ -50,7 +50,8 @@ public class PointMover : MonoBehaviour
 
     private void ProcessRotateTo(Vector3 direction)
     {
-        transform.LookAt(_currentTarget * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
     }
 
     private void SwitchTarget()
