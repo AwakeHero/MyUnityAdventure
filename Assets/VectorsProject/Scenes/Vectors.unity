@@ -516,6 +516,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PointMover
   _speed: 5
+  _agroDistance: 5
+  _rotationSpeed: 300
+  _playerPosition: {fileID: 314450986}
   _targets:
   - {fileID: 747250209}
   - {fileID: 1089932136}
@@ -525,7 +528,6 @@ MonoBehaviour:
   - {fileID: 273871021}
   - {fileID: 835748716}
   - {fileID: 1115258729}
-  _playerPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &314450985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,6 +1415,7 @@ MonoBehaviour:
   _firstPoint: {fileID: 314450986}
   _secondPoint: {fileID: 309382562}
   _distanceText: {fileID: 536443133}
+  _agroDistance: 5
 --- !u!4 &1999508288
 Transform:
   m_ObjectHideFlags: 0
