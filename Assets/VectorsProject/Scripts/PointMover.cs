@@ -10,7 +10,7 @@ public class PointMover : MonoBehaviour
     [SerializeField] private Queue<Vector3> _targetsPosition;
     private Vector3 _currentTarget;
     private float _minDistanceToTarget = 0.05f;
-    private float _minDistanceToPlayer = 3f;
+    private float _agroDistance = 3f;
     [SerializeField] private Vector3 _playerPosition;
 
     private void Awake()
@@ -21,29 +21,25 @@ public class PointMover : MonoBehaviour
             _targetsPosition.Enqueue(target.position);
         SwitchTarget();
     } 
+
+    private Vector3 GetDirectionToHero() => _playerPosition - transform.position;
+    private Vector3 GetDirectionToTarget() => _currentTarget - transform.position;
     private void Update()
     {
-        Vector3 directionToTarget = _currentTarget - transform.position;
-        Vector3 directionToPlayer = _playerPosition - transform.position;
-        if (IsPlayerDetected(directionToPlayer))
-        {
-            if (directionToTarget.magnitude <= _minDistanceToTarget) SwitchTarget();
-            Vector3 normalizedDirection = directionToTarget.normalized;
-            ProcessMoveTo(normalizedDirection);
-            ProcessRotateTo(normalizedDirection);
-        }
-        else
-        {
-            Vector3 normalizedDirection = directionToPlayer.normalized;
-            ProcessMoveTo(normalizedDirection);
-            ProcessRotateTo(normalizedDirection);
-        }
-        
-    }
+        Vector3 direction = GetDirectionToHero();
 
-    private bool IsPlayerDetected(Vector3 directionToPlayer)
+        if (!IsPlayerDetected())
+        {
+            direction = GetDirectionToTarget();
+            if (direction.magnitude <= _minDistanceToTarget) SwitchTarget();
+        }
+        ProcessMoveTo(direction.normalized);
+        ProcessRotateTo(direction.normalized);
+    }
+    
+    private bool IsPlayerDetected()
     {
-        return directionToPlayer.magnitude <= _minDistanceToPlayer;
+        return GetDirectionToHero().magnitude <= _agroDistance;
     }
 
     private void ProcessMoveTo(Vector3 direction)
@@ -54,7 +50,7 @@ public class PointMover : MonoBehaviour
 
     private void ProcessRotateTo(Vector3 direction)
     {
-        transform.LookAt(_currentTarget);
+        transform.LookAt(_currentTarget * Time.deltaTime);
     }
 
     private void SwitchTarget()
